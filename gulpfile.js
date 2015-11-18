@@ -15,6 +15,7 @@ var browserify = require("browserify");
 var source = require("vinyl-source-stream");
 var beeper = require("beeper");
 var del  = require("del");
+var sourcemaps = require('gulp-sourcemaps');
 
 function onError(err){
     beeper();
@@ -30,7 +31,7 @@ gulp.task('styles', function () {
 
 
 gulp.task('scripts', function () {
-    return gulp.src('app/js/*.js').pipe(jshint()).pipe(jshint.reporter('default')).pipe(uglify('all.js')).pipe(uglify()).pipe(gulp.dest('dist/'))
+    return gulp.src('app/js/*.js').pipe(sourcemaps.init()).pipe(jshint()).pipe(jshint.reporter('default')).pipe(uglify('all.js')).pipe(uglify()).pipe(sourcemaps.write('dist/maps')).pipe(gulp.dest('dist/'))
 });
 
 gulp.task('images',function(){
