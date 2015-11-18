@@ -10,6 +10,8 @@ var imagemin = require("gulp-imagemin");
 var connect = require("connect");
 var serve = require("serve-static");
 var browsersync = require("browser-sync");
+var browserify = require("browserify");
+var source = require("vinyl-source-stream");
 gulp.task('styles', function () {
     return gulp.src('app/css/*.css')
         .pipe(concat('all.css')).pipe(myth()).pipe(gulp.dest('dist/'));
@@ -44,6 +46,11 @@ gulp.task('watch', function () {
     gulp.watch('app/js/*.js',  gulp.series('scripts',browsersync.reload));
     gulp.watch('app/img/*', gulp.series('images',browsersync.reload));
 });
+
+gulp.task('browserify',function(){
+    return browserify('./app/js/app.js').bundle().pipe(source('bundle.js')).pipe(gulp.dest('dist'));
+});
+
 
 
 gulp.task('default', gulp.parallel('images', 'scripts', 'styles','server','browsersync','watch'));
