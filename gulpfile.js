@@ -9,6 +9,7 @@ var myth = require("gulp-myth");
 var imagemin = require("gulp-imagemin");
 var connect = require("connect");
 var serve = require("serve-static");
+var browsersync = require("browser-sync");
 gulp.task('styles', function () {
     return gulp.src('app/css/*.css')
         .pipe(concat('all.css')).pipe(myth()).pipe(gulp.dest('dist/'));
@@ -30,11 +31,19 @@ gulp.task('server',function(){
     })
 });
 
+gulp.task('browsersync',function(cb){
+    return browsersync({
+        server:{
+            baseDir: './'
+        }
+    },cb);
+});
+
 gulp.task('watch', function () {
-    gulp.watch('app/css/*.css', 'styles');
-    gulp.watch('app/js/*.js', 'scripts');
-    gulp.watch('app/img/*', 'images');
+    gulp.watch('app/css/*.css', gulp.series('styles',browsersync.reload));
+    gulp.watch('app/js/*.js',  gulp.series('scripts',browsersync.reload));
+    gulp.watch('app/img/*', gulp.series('images',browsersync.reload));
 });
 
 
-gulp.task('default', gulp.parallel('images', 'scripts', 'styles','server','watch'));
+gulp.task('default', gulp.parallel('images', 'scripts', 'styles','server','browsersync','watch'));

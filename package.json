@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rengokantai/pkgestgulp",
   "devDependencies": {
+    "browser-sync": "^2.10.0",
     "connect": "^3.4.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
