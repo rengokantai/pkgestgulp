@@ -7,14 +7,24 @@ var uglify = require("gulp-uglify");
 var jshint = require("gulp-jshint");
 var myth = require("gulp-myth");
 var imagemin = require("gulp-imagemin");
+var plumber = require("gulp-plumber");
 var connect = require("connect");
 var serve = require("serve-static");
 var browsersync = require("browser-sync");
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
+var beeper = require("beeper");
+
+function onError(err){
+    beeper();
+    console.log(err);
+}
+
 gulp.task('styles', function () {
     return gulp.src('app/css/*.css')
-        .pipe(concat('all.css')).pipe(myth()).pipe(gulp.dest('dist/'));
+        .pipe(plumber({
+            errorHandler:onError
+        })).pipe(concat('all.css')).pipe(myth()).pipe(gulp.dest('dist/'));
 });
 
 
