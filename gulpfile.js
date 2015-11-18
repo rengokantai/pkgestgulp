@@ -14,6 +14,7 @@ var browsersync = require("browser-sync");
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
 var beeper = require("beeper");
+var del  = require("del");
 
 function onError(err){
     beeper();
@@ -52,13 +53,17 @@ gulp.task('browsersync',function(cb){
 });
 
 gulp.task('watch', function () {
-    gulp.watch('app/css/*.css', gulp.series('styles',browsersync.reload));
-    gulp.watch('app/js/*.js',  gulp.series('scripts',browsersync.reload));
-    gulp.watch('app/img/*', gulp.series('images',browsersync.reload));
+    gulp.watch('app/css/*.css', gulp.series('clean','styles',browsersync.reload));
+    gulp.watch('app/js/*.js',  gulp.series('clean','scripts',browsersync.reload));
+    gulp.watch('app/img/*', gulp.series('clean','images',browsersync.reload));
 });
 
 gulp.task('browserify',function(){
     return browserify('./app/js/app.js').bundle().pipe(source('bundle.js')).pipe(gulp.dest('dist'));
+});
+
+gulp.task('clean',function(cb){
+    return del(['dist/*','!dist/site.css'],cb); //Do not delete dist/site.css
 });
 
 
